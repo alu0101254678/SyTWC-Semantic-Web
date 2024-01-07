@@ -8,5 +8,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@comunica/query-sparql": "^2.10.1",
+    "express": "^4.18.2"
+  }
 }
