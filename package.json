@@ -4,7 +4,7 @@
   "description": "Repositorio que aloja la práctica relacionada con Web Semántica de la asignatura Sistemas y Tecnologías Web Cliente",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
