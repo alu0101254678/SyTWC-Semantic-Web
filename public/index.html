@@ -81,14 +81,18 @@
         </div>
 
         <script>
-
+            // Añade un evento de envío al formulario de equipos españoles
             document.getElementById('spanishTeamsForm').addEventListener('submit', function(event) {
+                 // Previene la acción por defecto del formulario
                 event.preventDefault();
+                // Realiza una petición a la ruta '/search/spanishteams'
                 fetch(`/search/spanishteams`)
                     .then(response => response.json())
                     .then(data => {
+                        // Obtiene el elemento de resultados y lo limpia
                         const resultsElement = document.getElementById('results').getElementsByTagName('tbody')[0];
                         resultsElement.innerHTML = '';
+                        // Itera sobre los datos recibidos y crea una nueva fila para cada uno
                         data.forEach(item => {
                             const tr = document.createElement('tr');
                             const td = document.createElement('td');
@@ -98,6 +102,7 @@
                         });
                     })
                     .catch((error) => {
+                        // Muestra el error en la consola si algo sale mal
                         console.error('Error:', error);
                     });
             });

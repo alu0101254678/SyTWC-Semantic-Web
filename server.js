@@ -1,14 +1,21 @@
+// Import the necessary modules
 const express = require('express');
 const QueryEngine = require('@comunica/query-sparql').QueryEngine;
+
+// Create a new QueryEngine instance
 const myEngine = new QueryEngine();
 
+// Create a new Express application
 const app = express();
 
-app.use(express.json()); // for parsing application/json
+// Middleware to parse JSON bodies
+app.use(express.json());
 
-// Serve static files from the "public" directory
+// Middleware to serve static files from the "public" directory
 app.use(express.static('public'));
 
+// Define a route handler for GET requests to '/search/spanishteams'
+// This handler executes a SPARQL query to get Spanish football teams
 app.get('/search/spanishteams', async (req, res) => {
     const bindingsStream = await myEngine.queryBindings(
         `
@@ -26,21 +33,27 @@ app.get('/search/spanishteams', async (req, res) => {
       sources: [{type: 'sparql',value:'https://query.wikidata.org/sparql'}]
         },
     );
+    // Array to store the results
     const results = [];
+    // Event listener for 'data' event
     bindingsStream.on('data', (binding) => {
         results.push(binding.toString());
     });
 
+    // Event listener for 'end' event
     bindingsStream.on('end', () => {
         res.json(results);
     });
 
+    // Event listener for 'error' event
     bindingsStream.on('error', (error) => {
         console.error(error);
         res.status(500).send('Error executing SPARQL query');
     });
 });
 
+// Define a route handler for GET requests to '/search/teamsportstitles'
+// This handler executes a SPARQL query to get football teams and their titles
 app.get('/search/teamsportstitles', async (req, res) => {
     const scientist = req.params.scientist;
     const bindingsStream = await myEngine.queryBindings(
@@ -79,7 +92,8 @@ app.get('/search/teamsportstitles', async (req, res) => {
     });
 });
 
-// server.js
+// Define a route handler for GET requests to '/search/teamstadiums'
+// This handler executes a SPARQL query to get football teams and their stadiums
 app.get('/search/teamstadiums', async (req, res) => {
     const bindingsStream = await myEngine.queryBindings(
         `
@@ -115,8 +129,11 @@ app.get('/search/teamstadiums', async (req, res) => {
     });
 });
 
+// Define a route handler for GET requests to '/search/city/:city'
+// This handler executes a SPARQL query to get football players born in a specific city
 app.get('/search/city/:city', async (req, res) => {
     const city = req.params.city;
+    // Execute the SPARQL query and get the results stream
     const bindingsStream = await myEngine.queryBindings(
         `
         PREFIX dbo: <http://dbpedia.org/ontology/>
@@ -146,6 +163,6 @@ app.get('/search/city/:city', async (req, res) => {
     });
 });
 
-
+// Define the port number and start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
