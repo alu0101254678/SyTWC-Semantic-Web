@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SparQL</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 0;
+            }
+            h1 {
+                text-align: center;
+                padding: 20px;
+            }
+            #results {
+                width: 80%;
+                border-collapse: collapse;
+                margin: auto;
+            }
+            #results th, #results td {
+                border: 1px solid #ccc;
+                padding: 10px;
+                text-align: left;
+            }
+            .form-container {
+                display: flex;
+                justify-content: space-around;
+                flex-wrap: wrap;
+                padding: 20px;
+            }
+            .form-container form {
+                margin: 10px;
+            }
+            button {
+                background-color: #4CAF50;
+                color: white;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                cursor: pointer;
+                border: none;
+            }
+            input[type=text] {
+                width: 100%;
+                padding: 12px 20px;
+                margin: 8px 0;
+                box-sizing: border-box;
+                border: 3px solid #ccc;
+                -webkit-transition: 0.5s;
+                transition: 0.5s;
+                outline: none;
+            }
+            input[type=text]:focus {
+                border: 3px solid #555;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Ejemplos de consultas SPARQL</h1>
+        <div class="form-container">
+            <form id="spanishTeamsForm">
+                <button type="submit">Lista de equipos de fútbol españoles</button>
+            </form>
+            <form id="searchForm">
+                <button type="submit">Títulos de fútbol de cada equipo</button>
+            </form>
+            <form id="teamStadiumsForm">
+                <button type="submit">Estadios de equipos de fútbol</button>
+            </form>
+            <form id="citySearchForm">
+                <input type="text" id="citySearchTerm" placeholder="Buscar jugadores por ciudad">
+                <button type="submit">Buscar</button>
+            </form>
+            <table id="results">
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <script>
+
+            document.getElementById('spanishTeamsForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                fetch(`/search/spanishteams`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const resultsElement = document.getElementById('results').getElementsByTagName('tbody')[0];
+                        resultsElement.innerHTML = '';
+                        data.forEach(item => {
+                            const tr = document.createElement('tr');
+                            const td = document.createElement('td');
+                            td.textContent = item;
+                            tr.appendChild(td);
+                            resultsElement.appendChild(tr);
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            });
+
+
+            document.getElementById('searchForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                fetch(`/search/teamsportstitles`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const resultsElement = document.getElementById('results').getElementsByTagName('tbody')[0];
+                        resultsElement.innerHTML = '';
+                        data.forEach(item => {
+                            const tr = document.createElement('tr');
+                            const td = document.createElement('td');
+                            td.textContent = item;
+                            tr.appendChild(td);
+                            resultsElement.appendChild(tr);
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            });
+
+            document.getElementById('teamStadiumsForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                fetch(`/search/teamstadiums`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const resultsElement = document.getElementById('results').getElementsByTagName('tbody')[0];
+                        resultsElement.innerHTML = '';
+                        data.forEach(item => {
+                            const tr = document.createElement('tr');
+                            const td = document.createElement('td');
+                            td.textContent = item;
+                            tr.appendChild(td);
+                            resultsElement.appendChild(tr);
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            });
+
+            document.getElementById('citySearchForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+            
+                const searchTerm = document.getElementById('citySearchTerm').value.replace(/\s/g, '_'); // replace spaces with underscores
+                fetch(`/search/city/${searchTerm}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultsElement = document.getElementById('results').getElementsByTagName('tbody')[0];
+                    resultsElement.innerHTML = '';
+                    data.forEach(item => {
+                        const tr = document.createElement('tr');
+                        const td = document.createElement('td');
+                        td.textContent = item;
+                        tr.appendChild(td);
+                        resultsElement.appendChild(tr);
+                    });
+                })            
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            });
+        </script>
+    </body>
+</html>
